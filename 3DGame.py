@@ -39,8 +39,8 @@ window = render.Window('3DGame', 400, 400, 'black')
 
 quality = 100
 
-fov = 5
-fov_plane = 1
+fov = 40
+fov_plane = 0.1
 # view = ['%', '█', '▓', '▒', '░', ' ']
 view = ['█', '▇', '▆', '▅', '▄', '▃', '▂', '▁', '_']
 # view = ['█', '▓', '▒', '░']
