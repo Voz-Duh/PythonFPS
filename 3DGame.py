@@ -125,13 +125,21 @@ def raycast(direction, origin: vec.tor2, not_player):
         map_orig_x = math.floor(_origin.x)
         map_orig_y = math.floor(_origin.y)
 
+        for p in range(0, len(window.players)):
+            if p != not_player:
+                pp_x = window.players[p].position.x
+                pp_y = window.players[p].position.y
+                if pp_x - 0.5 < _origin.x < pp_x + 0.5:
+                    if pp_y - 0.5 < _origin.y < pp_y + 0.5:
+                        _origin = vec.tor2(clamp(old_origin.x, pp_x - 0.5, pp_x + 0.5),
+                                           clamp(old_origin.y, pp_y - 0.5, pp_y + 0.5))
+                        return RaycastResult(Tile(render.Color(r=255), render.Color(r=100)), clamp(origin.len_to(_origin) / view_distance, 0, 1))
+
         if 0 <= map_orig_x < len(play_map[0]) and 0 <= map_orig_y < len(play_map):
             if play_map[map_orig_y][map_orig_x] != ' ':
                 _origin = vec.tor2(clamp(old_origin.x, map_orig_x, map_orig_x + 1),
                                    clamp(old_origin.y, map_orig_y, map_orig_y + 1))
                 return RaycastResult(play_map[map_orig_y][map_orig_x], clamp(origin.len_to(_origin) / view_distance, 0, 1))
-        else:
-            return None
         old_origin = _origin.clone()
     return None
 
@@ -178,7 +186,7 @@ def shoot(self, direction, origin, not_player):
                         window.players[p].health -= 1
                         self.input_event =\
                             'PLAYER {0} GET HIT\nRIGHT MOUSE BUTTON TO CONTINUE'.format(window.players[p].name.upper())
-                        if window.players[p] <= 0:
+                        if window.players[p].health <= 0:
                             window.players.remove(window.players[p])
                         return RaycastResult(p, distance / (max_step * step_range))
         _origin += vec.tor2(vec.dcos(direction) * step_range,
@@ -313,7 +321,7 @@ def win_update(self: render.Window, dt):
 
     if self.current_steps == 0:
         self.current_player += 1
-        if self.current_player == len(self.players):
+        if self.current_player >= len(self.players):
             self.current_player = 0
         self.current_steps = player_steps
 
