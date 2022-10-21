@@ -37,7 +37,7 @@ class RaycastResult:
 
 window = render.Window('3DGame', 400, 400, 'black')
 
-quality = 100
+quality = 200
 
 fov = 40
 fov_plane = 0.1
@@ -269,10 +269,10 @@ def win_draw(self: render.Window):
                             vec.tor2(self.window_size.x * (0.5 / quality),
                                      (1 - hits[f].distance) * self.window_size.y / 2),
                             fill=color.hex, outline='')
-    self.draw_text(vec.tor2(0, self.window_size.y - 40),
+    self.draw_text(vec.tor2(0, self.window_size.y / 2 - 40),
                    'Player {0}; Health {1}; Steps: {2}; Can shoot: {3};'
                    .format(self.players[self.current_player].name, self.players[self.current_player].health,
-                           self.current_steps, self.current_steps > 20), fill=render.Color(r=40, g=120, b=200).hex)
+                           self.current_steps, self.current_steps > 20), fill=render.Color().hex)
     #time.sleep(0.1)
 
 
