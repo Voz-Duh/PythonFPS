@@ -37,14 +37,10 @@ class RaycastResult:
 
 window = render.Window('3DGame', 400, 400, 'black')
 
-quality = 200
+quality = 100# max(int(input('Quality of game: ')), 20)
 
 fov = 40
 fov_plane = 0.1
-# view = ['%', '█', '▓', '▒', '░', ' ']
-view = ['█', '▇', '▆', '▅', '▄', '▃', '▂', '▁', '_']
-# view = ['█', '▓', '▒', '░']
-floor = '░'
 
 ora = Tile(render.Color(hex='#D8683C'), render.Color(hex='#6B3017'))
 gre = Tile(render.Color(hex='#60F243'), render.Color(hex='#116800'))
@@ -143,38 +139,6 @@ def raycast(direction, origin: vec.tor2, not_player):
         old_origin = _origin.clone()
     return None
 
-def raycast_(direction, origin, not_player):
-    _origin = origin.clone()
-    old_origin = _origin.clone()
-    distance = 0
-    for i in range(0, max_step):
-        map_orig_x = math.floor(_origin.x)
-        map_orig_y = math.floor(_origin.y)
-
-        if 0 <= map_orig_x < len(play_map[0]):
-            if 0 <= map_orig_y < len(play_map):
-                if play_map[map_orig_y][map_orig_x] != ' ':
-                    dist = get_box_dist(old_origin, vec.tor2(map_orig_x, map_orig_y))
-                    distance -= step_range
-
-                    hit_result = RaycastResult(play_map[map_orig_y][map_orig_x],
-                                               (distance) / (max_step * step_range))
-
-                    return hit_result
-
-        for p in range(0, len(window.players)):
-            if p != not_player:
-                if window.players[p].position.x - 0.5 < _origin.x < window.players[p].position.x + 0.5:
-                    if window.players[p].position.y - 0.5 < _origin.y < window.players[p].position.y + 0.5:
-                        return RaycastResult(Tile(render.Color(r=255), render.Color(r=100)), distance / (max_step * step_range))
-
-        old_origin = _origin.clone()
-        _origin += vec.tor2(vec.dcos(direction) * step_range,
-                            vec.dsin(direction) * step_range)
-        distance += step_range
-    return RaycastResult(Tile(render.Color(), render.Color()), distance / (max_step * step_range))
-
-
 def shoot(self, direction, origin, not_player):
     _origin = origin.clone()
     distance = 0
@@ -212,18 +176,6 @@ def raycast_step(direction, origin, max_step, step_range):
     return ' '
 
 
-def get_view(distance):
-    if distance <= 0.2:
-        return view[1]
-    elif distance <= 0.4:
-        return view[2]
-    elif distance <= 0.6:
-        return view[3]
-    elif distance <= 0.9:
-        return view[4]
-    return view[5]
-
-
 player_steps = 100
 window.current_steps = player_steps
 
@@ -258,7 +210,7 @@ def win_draw(self: render.Window):
         view_power = (f / quality - 0.5) * 2
         hits.append(raycast(direction + view_power * fov,
                     self.players[self.current_player].position +
-                    vec.tor2(vec.dsin(direction) * view_power * step_range, vec.dcos(direction) * view_power * step_range),
+                    vec.tor2(vec.dsin(direction) * view_power * -fov_plane, vec.dcos(direction) * view_power * -fov_plane),
                     self.current_player))
 
     self.draw_rectangle_from_to(vec.tor2(-self.window_size.x / 2, self.window_size.y / 6),
