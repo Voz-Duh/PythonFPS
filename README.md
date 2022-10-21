@@ -1,5 +1,5 @@
 # PythonFPS
-Step by step FPS on python
+Turn-based FPS on python
 
 # How to play?
 Just run 3DGame.py
@@ -8,8 +8,8 @@ W - Move forward
 
 S - Move back
 
-D - Rotate right
+D - Turn right
 
-A - Rotate right
+A - Turn right
 
 LMB - Shoot
