@@ -1,7 +1,7 @@
 # PythonFPS
-Turn-based FPS on python
+Turn-based FPS in python
 
-# How to play?
+## How to play?
 Just run 3DGame.py
 
 W - Move forward
